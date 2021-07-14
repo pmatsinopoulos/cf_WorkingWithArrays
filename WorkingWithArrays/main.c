@@ -36,11 +36,11 @@ int main(int argc, const char * argv[]) {
   };
   
   CFArrayCallBacks cfCustomersCallBacks = {
-    0,
-    CustomersCallBackRetain,
-    CustomersCallBackRelease,
-    CustomersCallBackCopyDescription,
-    CustomersCallBacksEqual
+    .version = 0,
+    .retain = CustomersCallBackRetain,
+    .release = CustomersCallBackRelease,
+    .copyDescription = CustomersCallBackCopyDescription,
+    .equal = CustomersCallBacksEqual
   };
   
   CFArrayRef cfCustomers = CFArrayCreate(kCFAllocatorDefault,
