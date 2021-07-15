@@ -9,12 +9,15 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 int main(int argc, const char * argv[]) {
-  const int NUMBER_OF_CUSTOMERS = 3;
+  const int NUMBER_OF_CUSTOMERS = 6;
   
   CFStringRef customers[NUMBER_OF_CUSTOMERS] = {
     CFSTR("John Woo"),
     CFSTR("Peter Pan"),
-    CFSTR("Mary Foo")
+    CFSTR("Mary Foo"),
+    CFSTR("Peter Pan"),
+    CFSTR("Queen Mary"),
+    CFSTR("Peter Pan")
   };
   
   CFArrayRef cfCustomers = CFArrayCreate(kCFAllocatorDefault,
@@ -22,17 +25,17 @@ int main(int argc, const char * argv[]) {
                                          NUMBER_OF_CUSTOMERS,
                                          &kCFTypeArrayCallBacks);
   
-  Boolean foundResult = CFArrayContainsValue(cfCustomers,
-                                             CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                             CFSTR("Mary Foo"));
-  // Prints "YES"
-  printf("found: %s\n", foundResult ? "YES" : "NO");
+  CFIndex numOfOcc = CFArrayGetCountOfValue(cfCustomers,
+                                            CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                                            CFSTR("Peter Pan"));
+  // Prints "3"
+  printf("Number of times found: %lu\n", numOfOcc);
   
-  foundResult = CFArrayContainsValue(cfCustomers,
-                                     CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                     CFSTR("Bob The Builder"));
-  // Prints "YES"
-  printf("found: %s\n", foundResult ? "YES" : "NO");
+  numOfOcc = CFArrayGetCountOfValue(cfCustomers,
+                                    CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                                    CFSTR("King George"));
+  // Prints "0"
+  printf("Number of times found: %lu\n", numOfOcc);
   
   CFRelease(cfCustomers);
   
