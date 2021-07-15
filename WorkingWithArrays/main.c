@@ -13,41 +13,27 @@ int main(int argc, const char * argv[]) {
   
   CFStringRef customers[NUMBER_OF_CUSTOMERS] = {
     CFSTR("John Woo"),
-    CFSTR("Mary Foo"),
-    CFSTR("Peter Pan")
+    CFSTR("Peter Pan"),
+    CFSTR("Mary Foo")
   };
-    
+  
   CFArrayRef cfCustomers = CFArrayCreate(kCFAllocatorDefault,
                                          (const void **)customers,
                                          NUMBER_OF_CUSTOMERS,
                                          &kCFTypeArrayCallBacks);
   
-  CFShow(cfCustomers);
+  Boolean foundResult = CFArrayContainsValue(cfCustomers,
+                                             CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                                             CFSTR("Mary Foo"));
+  // Prints "YES"
+  printf("found: %s\n", foundResult ? "YES" : "NO");
   
-  CFIndex searchResult = CFArrayBSearchValues(cfCustomers,
-                                              CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                              CFSTR("Mary Foo"),
-                                              (CFComparatorFunction)CFStringCompare,
-                                              NULL);
-  // Prints 1 for +searchResult+
-  printf("Search Result: %lu\n", searchResult);
+  foundResult = CFArrayContainsValue(cfCustomers,
+                                     CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                                     CFSTR("Bob The Builder"));
+  // Prints "YES"
+  printf("found: %s\n", foundResult ? "YES" : "NO");
   
-  searchResult = CFArrayBSearchValues(cfCustomers,
-                                      CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                      CFSTR("Queen Mary"),
-                                      (CFComparatorFunction)CFStringCompare,
-                                      NULL);
-  // Prints 3 for +searchResult+
-  printf("Search Result: %lu\n", searchResult);
-
-  searchResult = CFArrayBSearchValues(cfCustomers,
-                                      CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                      CFSTR("King George"),
-                                      (CFComparatorFunction)CFStringCompare,
-                                      NULL);
-  // Prints 1 for +searchResult+
-  printf("Search Result: %lu\n", searchResult);
-
   CFRelease(cfCustomers);
   
   return 0;
