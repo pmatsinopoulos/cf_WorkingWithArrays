@@ -8,6 +8,10 @@
 #include <stdio.h>
 #include <CoreFoundation/CoreFoundation.h>
 
+void CustomersShowApplier (const void *value, void *context) {
+  printf("%s %s\n", (const char *)context, CFStringGetCStringPtr((CFStringRef)value, CFStringGetSystemEncoding()));
+}
+
 int main(int argc, const char * argv[]) {
   const int NUMBER_OF_CUSTOMERS = 6;
   
@@ -25,13 +29,12 @@ int main(int argc, const char * argv[]) {
                                          NUMBER_OF_CUSTOMERS,
                                          &kCFTypeArrayCallBacks);
   
-  CFIndex numberOfCustomers = CFArrayGetCount(cfCustomers);
-  
-  for (CFIndex i = 0; i < numberOfCustomers; i++) {
-    CFStringRef v = (CFStringRef)CFArrayGetValueAtIndex(cfCustomers, i);
-    CFShow(v);
-  }
-  
+  const char *greeting = "Hello";
+  CFArrayApplyFunction(cfCustomers,
+                       CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                       CustomersShowApplier,
+                       (void *)greeting);
+    
   CFRelease(cfCustomers);
   
   return 0;
