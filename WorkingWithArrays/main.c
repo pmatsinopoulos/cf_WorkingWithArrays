@@ -9,22 +9,29 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 int main(int argc, const char * argv[]) {
-  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault,
+                                                       0,
+                                                       &kCFTypeArrayCallBacks);
   
   CFStringRef customer = CFSTR("Peter Pan");
-  
   CFArrayAppendValue(cfCustomers, customer);
-  
-  printf("Printing elements of array:\n");
-  CFShow(cfCustomers);
   
   customer = CFSTR("John Woo");
-  
   CFArrayAppendValue(cfCustomers, customer);
   
-  printf("Printing elements of array:\n");
+  customer = CFSTR("Mary Foo");
+  CFArrayAppendValue(cfCustomers, customer);
+
+  printf("Before sorting:\n");
   CFShow(cfCustomers);
   
+  CFArraySortValues(cfCustomers,
+                    CFRangeMake(0, CFArrayGetCount(cfCustomers)),
+                    (CFComparatorFunction)CFStringCompare, NULL);
+
+  printf("After sorting:\n");
+  CFShow(cfCustomers);
+
   CFRelease(cfCustomers);
   
   return 0;
