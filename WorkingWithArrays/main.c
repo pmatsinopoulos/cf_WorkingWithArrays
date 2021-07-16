@@ -9,9 +9,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 int main(int argc, const char * argv[]) {
-  const int NUMBER_OF_CUSTOMERS = 6;
-  
-  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault, NUMBER_OF_CUSTOMERS, &kCFTypeArrayCallBacks);
+  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
   
   CFStringRef customer = CFSTR("Peter Pan");
   
