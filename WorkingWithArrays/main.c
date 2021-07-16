@@ -8,33 +8,25 @@
 #include <stdio.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-void CustomersShowApplier (const void *value, void *context) {
-  printf("%s %s\n", (const char *)context, CFStringGetCStringPtr((CFStringRef)value, CFStringGetSystemEncoding()));
-}
-
 int main(int argc, const char * argv[]) {
   const int NUMBER_OF_CUSTOMERS = 6;
   
-  CFStringRef customers[NUMBER_OF_CUSTOMERS] = {
-    CFSTR("John Woo"),
-    CFSTR("Peter Pan"),
-    CFSTR("Mary Foo"),
-    CFSTR("Peter Pan"),
-    CFSTR("Queen Mary"),
-    CFSTR("Peter Pan")
-  };
+  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault, NUMBER_OF_CUSTOMERS, &kCFTypeArrayCallBacks);
   
-  CFArrayRef cfCustomers = CFArrayCreate(kCFAllocatorDefault,
-                                         (const void **)customers,
-                                         NUMBER_OF_CUSTOMERS,
-                                         &kCFTypeArrayCallBacks);
+  CFStringRef customer = CFSTR("Peter Pan");
   
-  const char *greeting = "Hello";
-  CFArrayApplyFunction(cfCustomers,
-                       CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                       CustomersShowApplier,
-                       (void *)greeting);
-    
+  CFArrayAppendValue(cfCustomers, customer);
+  
+  printf("Printing elements of array:\n");
+  CFShow(cfCustomers);
+  
+  customer = CFSTR("John Woo");
+  
+  CFArrayAppendValue(cfCustomers, customer);
+  
+  printf("Printing elements of array:\n");
+  CFShow(cfCustomers);
+  
   CFRelease(cfCustomers);
   
   return 0;
