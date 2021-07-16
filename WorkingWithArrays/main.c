@@ -25,25 +25,13 @@ int main(int argc, const char * argv[]) {
                                          NUMBER_OF_CUSTOMERS,
                                          &kCFTypeArrayCallBacks);
   
-  CFIndex positionFound = CFArrayGetFirstIndexOfValue(cfCustomers,
-                                                      CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                                      CFSTR("Peter Pan"));
-  // Prints "1"
-  printf("Found at position: %ld\n", positionFound);
+  CFIndex numberOfCustomers = CFArrayGetCount(cfCustomers);
   
-  positionFound = CFArrayGetLastIndexOfValue(cfCustomers,
-                                             CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                             CFSTR("Peter Pan"));
-  // Prints "5"
-  printf("Found at position: %ld\n", positionFound);
+  for (CFIndex i = 0; i < numberOfCustomers; i++) {
+    CFStringRef v = (CFStringRef)CFArrayGetValueAtIndex(cfCustomers, i);
+    CFShow(v);
+  }
   
-
-  positionFound = CFArrayGetLastIndexOfValue(cfCustomers,
-                                             CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                                             CFSTR("King George"));
-  // Prints "-1"
-  printf("Found at position: %ld\n", positionFound);
-
   CFRelease(cfCustomers);
   
   return 0;
