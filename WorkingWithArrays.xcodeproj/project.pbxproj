@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E594AC2D269D4B9A005AD5F2 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E594AC2C269D4B9A005AD5F2 /* main.c */; };
+		E5DB820526A2A4B000DFBFD8 /* Temperature.c in Sources */ = {isa = PBXBuildFile; fileRef = E5DB820426A2A4B000DFBFD8 /* Temperature.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		E594AC29269D4B9A005AD5F2 /* WorkingWithArrays */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WorkingWithArrays; sourceTree = BUILT_PRODUCTS_DIR; };
 		E594AC2C269D4B9A005AD5F2 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		E5DB820326A2A4B000DFBFD8 /* Temperature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Temperature.h; sourceTree = "<group>"; };
+		E5DB820426A2A4B000DFBFD8 /* Temperature.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Temperature.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				E594AC2C269D4B9A005AD5F2 /* main.c */,
+				E5DB820326A2A4B000DFBFD8 /* Temperature.h */,
+				E5DB820426A2A4B000DFBFD8 /* Temperature.c */,
 			);
 			path = WorkingWithArrays;
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5DB820526A2A4B000DFBFD8 /* Temperature.c in Sources */,
 				E594AC2D269D4B9A005AD5F2 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
