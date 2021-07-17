@@ -23,6 +23,8 @@ const void *TemperatureRetain (CFAllocatorRef allocator, const void *value) {
 }
 
 void TemperatureRelease (CFAllocatorRef allocator, const void *value) {
+  free((void *)value);
+  value = NULL;
   return;
 }
 
@@ -59,30 +61,32 @@ CFStringRef TemperatureCopyDescription (const void *value) {
   return CFStringCreateWithCString(kCFAllocatorDefault, valueDesc, CFStringGetSystemEncoding());
 }
 
+void TemperatureAppend(CFMutableArrayRef temperatures, Date date, int maximum, int minimum) {
+  Temperature *temperature = malloc(sizeof(Temperature));
+
+  temperature->date = date;
+  temperature->maximum = maximum;
+  temperature->minimum = minimum;
+
+  CFArrayAppendValue(temperatures, temperature);
+}
+
 int main(int argc, const char * argv[]) {
-  const int NUMBER_OF_TEMPERATURES = 7;
-  
-  Temperature temperatures[NUMBER_OF_TEMPERATURES] = {
-    { .date = Mon, .maximum = 41, .minimum = 31 },
-    { .date = Tue, .maximum = 40, .minimum = 32 },
-    { .date = Wed, .maximum = 34, .minimum = 28 },
-    { .date = Thu, .maximum = 36, .minimum = 31 },
-    { .date = Fri, .maximum = 30, .minimum = 26 },
-    { .date = Sat, .maximum = 40, .minimum = 35 },
-    { .date = Sun, .maximum = 42, .minimum = 38 },
-  };
-  Temperature *pTemperatures[NUMBER_OF_TEMPERATURES];
-  for(int i = 0; i < NUMBER_OF_TEMPERATURES; i++) {
-    pTemperatures[i] = &temperatures[i];
-  }
-  
   CFArrayCallBacks callbacks;
   callbacks.version = 0;
   callbacks.retain = TemperatureRetain;
   callbacks.release = TemperatureRelease;
   callbacks.copyDescription = TemperatureCopyDescription;
   
-  CFArrayRef cfTemperatures = CFArrayCreate(kCFAllocatorDefault, (const void **)pTemperatures, NUMBER_OF_TEMPERATURES, &callbacks);
+  CFMutableArrayRef cfTemperatures = CFArrayCreateMutable(kCFAllocatorDefault, 0, &callbacks);
+
+  TemperatureAppend(cfTemperatures, Mon, 41, 39);
+  TemperatureAppend(cfTemperatures, Tue, 40, 38);
+  TemperatureAppend(cfTemperatures, Wed, 38, 35);
+  TemperatureAppend(cfTemperatures, Thu, 39, 37);
+  TemperatureAppend(cfTemperatures, Fri, 42, 39);
+  TemperatureAppend(cfTemperatures, Sat, 37, 35);
+  TemperatureAppend(cfTemperatures, Sun, 36, 34);
   
   CFShow(cfTemperatures);
   
