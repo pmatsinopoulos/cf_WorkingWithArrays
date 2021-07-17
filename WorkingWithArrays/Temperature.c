@@ -52,17 +52,26 @@ CFStringRef TemperatureCopyDescription (const void *value) {
 
 void TemperatureAppend(CFMutableArrayRef temperatures, Date date, int maximum, int minimum) {
   Temperature *temperature = malloc(sizeof(Temperature));
-
+  
   temperature->date = date;
   temperature->maximum = maximum;
   temperature->minimum = minimum;
-
+  
   CFArrayAppendValue(temperatures, temperature);
 }
 
+Boolean TemperatureEqual (const void *value1, const void *value2) {
+  Temperature *t1 = (Temperature *)value1;
+  Temperature *t2 = (Temperature *)value2;
+  return (t1->date == t2->date &&
+          t1->maximum == t2->maximum &&
+          t1->minimum == t2->minimum);
+}
+
 const CFArrayCallBacks kTemperatureCallbacks = {
-  .version = 0,
-  .retain = TemperatureRetain,
+  .equal = TemperatureEqual,
+  .copyDescription = TemperatureCopyDescription,
   .release = TemperatureRelease,
-  .copyDescription = TemperatureCopyDescription
+  .retain = TemperatureRetain,
+  .version = 0
 };
