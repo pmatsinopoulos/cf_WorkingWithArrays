@@ -8,59 +8,91 @@
 #include <stdio.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-CFComparisonResult CustomersComparator (const void *val1, const void *val2, void *context) {
-  CFStringRef customer1 = (CFStringRef)val1;
-  CFStringRef customer2 = (CFStringRef)val2;
-  
-  CFArrayRef customer1Parts = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault,
-                                                                     customer1,
-                                                                     CFSTR(" "));
-  CFStringRef customer1LastName = CFArrayGetValueAtIndex(customer1Parts, 1);
-  CFStringRef customer1FirstName = CFArrayGetValueAtIndex(customer1Parts, 0);
+typedef enum {
+  Mon, Tue, Wed, Thu, Fri, Sat, Sun
+} Date;
 
-  CFArrayRef customer2Parts = CFStringCreateArrayBySeparatingStrings(kCFAllocatorDefault,
-                                                                     customer2,
-                                                                     CFSTR(" "));
-  CFStringRef customer2LastName = CFArrayGetValueAtIndex(customer2Parts, 1);
-  CFStringRef customer2FirstName = CFArrayGetValueAtIndex(customer2Parts, 0);
+typedef struct {
+  Date date;
+  int maximum;
+  int minimum;
+} Temperature;
 
-  CFComparisonResult result = CFStringCompare(customer1LastName, customer2LastName, 0);
-  
-  if ( result == kCFCompareEqualTo) {
-    result = CFStringCompare(customer1FirstName, customer2FirstName, 0);
+const void *TemperatureRetain (CFAllocatorRef allocator, const void *value) {
+  return value;
+}
+
+void TemperatureRelease (CFAllocatorRef allocator, const void *value) {
+  free((void *)value);
+  value = NULL;
+  return;
+}
+
+const char *TemperatureDate(Date d) {
+  switch (d) {
+    case Mon:
+      return "Mon";
+      break;
+    case Tue:
+      return "Tue";
+    case Wed:
+      return "Wed";
+    case Thu:
+      return "Thu";
+    case Fri:
+      return "Fri";
+    case Sat:
+      return "Sat";
+    case Sun:
+      return "Sun";
+    default:
+      fprintf(stderr, "Wrong date: %d\n", d);
+      exit(1);
   }
-    
-  CFRelease(customer1Parts);
-  CFRelease(customer2Parts);
+}
+
+CFStringRef TemperatureCopyDescription (const void *value) {
+  Temperature *pTemperature = (Temperature *)value;
+  int NUMBER_OF_CHARS = 1000;
+  char valueDesc[NUMBER_OF_CHARS];
+  memset(valueDesc, 0, NUMBER_OF_CHARS);
+  sprintf(valueDesc, "date = %s, maximum = %d, minimum = %d", TemperatureDate(pTemperature->date), pTemperature->maximum, pTemperature->minimum);
   
-  return result;
+  return CFStringCreateWithCString(kCFAllocatorDefault, valueDesc, CFStringGetSystemEncoding());
+}
+
+void TemperatureAppend(CFMutableArrayRef temperatures, Date date, int maximum, int minimum) {
+  Temperature *temperature = malloc(sizeof(Temperature));
+
+  temperature->date = date;
+  temperature->maximum = maximum;
+  temperature->minimum = minimum;
+
+  CFArrayAppendValue(temperatures, temperature);
 }
 
 int main(int argc, const char * argv[]) {
-  CFMutableArrayRef cfCustomers = CFArrayCreateMutable(kCFAllocatorDefault,
-                                                       0,
-                                                       &kCFTypeArrayCallBacks);
+  CFArrayCallBacks callbacks;
+  callbacks.version = 0;
+  callbacks.retain = TemperatureRetain;
+  callbacks.release = TemperatureRelease;
+  callbacks.copyDescription = TemperatureCopyDescription;
   
-  CFStringRef customer = CFSTR("Peter Pan");
-  CFArrayAppendValue(cfCustomers, customer);
-  
-  customer = CFSTR("John Woo");
-  CFArrayAppendValue(cfCustomers, customer);
-  
-  customer = CFSTR("Mary Foo");
-  CFArrayAppendValue(cfCustomers, customer);
+  CFMutableArrayRef cfTemperatures = CFArrayCreateMutable(kCFAllocatorDefault, 0, &callbacks);
 
-  printf("Before sorting:\n");
-  CFShow(cfCustomers);
+  TemperatureAppend(cfTemperatures, Mon, 41, 39);
+  TemperatureAppend(cfTemperatures, Tue, 40, 38);
+  TemperatureAppend(cfTemperatures, Wed, 38, 35);
+  TemperatureAppend(cfTemperatures, Thu, 39, 37);
+  TemperatureAppend(cfTemperatures, Fri, 42, 39);
+  TemperatureAppend(cfTemperatures, Sat, 37, 35);
+  TemperatureAppend(cfTemperatures, Sun, 36, 34);
   
-  CFArraySortValues(cfCustomers,
-                    CFRangeMake(0, CFArrayGetCount(cfCustomers)),
-                    (CFComparatorFunction)CustomersComparator, NULL);
-
-  printf("After sorting:\n");
-  CFShow(cfCustomers);
-
-  CFRelease(cfCustomers);
+  CFShow(cfTemperatures);
+  
+  CFRelease(cfTemperatures);
+  
+  printf("Bye!\n");
   
   return 0;
 }
