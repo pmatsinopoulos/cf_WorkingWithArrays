@@ -31,7 +31,16 @@ const char *TemperatureDate(Date d) {
 }
 
 const void *TemperatureRetain (CFAllocatorRef allocator, const void *value) {
-  return value;
+  if (!value) {
+    return value;
+  }
+  
+  Temperature *temperature = (Temperature *)value;
+  
+  Temperature *copyTemperature = malloc(sizeof(Temperature));
+  memcpy(copyTemperature, temperature, sizeof(Temperature));
+  
+  return copyTemperature;
 }
 
 void TemperatureRelease (CFAllocatorRef allocator, const void *value) {
@@ -58,6 +67,9 @@ void TemperatureAppend(CFMutableArrayRef temperatures, Date date, int maximum, i
   temperature->minimum = minimum;
   
   CFArrayAppendValue(temperatures, temperature);
+  
+  free(temperature);
+  temperature = NULL;
 }
 
 Boolean TemperatureEqual (const void *value1, const void *value2) {
