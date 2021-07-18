@@ -36,9 +36,9 @@ const void *TemperatureRetain (CFAllocatorRef allocator, const void *value) {
   }
   
   Temperature *temperature = (Temperature *)value;
-  
   Temperature *copyTemperature = malloc(sizeof(Temperature));
-  memcpy(copyTemperature, temperature, sizeof(Temperature));
+  
+  *copyTemperature = *temperature;
   
   return copyTemperature;
 }
