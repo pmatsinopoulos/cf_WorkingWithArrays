@@ -60,16 +60,13 @@ CFStringRef TemperatureCopyDescription (const void *value) {
 }
 
 void TemperatureAppend(CFMutableArrayRef temperatures, Date date, int maximum, int minimum) {
-  Temperature *temperature = malloc(sizeof(Temperature));
+  Temperature temperature;
   
-  temperature->date = date;
-  temperature->maximum = maximum;
-  temperature->minimum = minimum;
+  temperature.date = date;
+  temperature.maximum = maximum;
+  temperature.minimum = minimum;
   
-  CFArrayAppendValue(temperatures, temperature);
-  
-  free(temperature);
-  temperature = NULL;
+  CFArrayAppendValue(temperatures, &temperature);
 }
 
 Boolean TemperatureEqual (const void *value1, const void *value2) {
